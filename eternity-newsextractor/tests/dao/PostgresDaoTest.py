@@ -81,6 +81,12 @@ class PostgresDaoTest(unittest.TestCase):
             'test_table', 'id', ['third', 'second'])
         self.assertTrue(has_record)
 
+    def step_05_read_record(self):
+        has_record = self.dao.has_record('test_table','id','1')
+        self.assertFalse(has_record)
+        has_record = self.dao.has_record('test_table','id','first')
+        self.assertTrue(has_record)
+
     # def tearDown(self):
     #     self.item_dao.delete_item_collection()
 
