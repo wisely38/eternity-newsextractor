@@ -59,14 +59,25 @@ class PostgresDaoTest(unittest.TestCase):
         df.loc[-1] = ['first', 'a', 'b']
         df.index = df.index + 1  # shifting index
         df = df.sort_index()
+        df.loc[-1] = ['third', 'c', 'd']
+        df.index = df.index + 1  # shifting index
+        df = df.sort_index()
         self.dao.write_table(df, table_parameters)
         df = self.dao.read_table('test_table')
-        self.assertEqual(1, len(df.values.tolist()))
+        self.assertEqual(2, len(df.values.tolist()))
 
     def step_05_read_record(self):
-        has_record = self.dao.has_record('test_table','id','1')
+        has_record = self.dao.has_record('test_table', 'id', '1')
         self.assertFalse(has_record)
-        has_record = self.dao.has_record('test_table','id','first')
+        has_record = self.dao.has_record('test_table', 'id', 'first')
+        self.assertTrue(has_record)
+
+    def step_06_read_records(self):
+        has_record = self.dao.has_records('test_table', 'id', ['first'])
+        self.assertTrue(has_record)
+        has_record = self.dao.has_records('test_table', 'id', ['0', '10'])
+        self.assertFalse(has_record)
+        has_record = self.dao.has_records('test_table', 'id', ['third', 'second'])
         self.assertTrue(has_record)
 
     # def tearDown(self):

@@ -9,12 +9,13 @@ class CNNNewsExtractor:
     def __init__(self):
         self.cnn_url = 'http://cnn.com'
         self.dao = PostgresDao()
+        self.table_name = 'cnn_news'
+        self.columns = ['article_id', 'category',
+                        'url', 'authors', 'keywords', 'body']
+        self.cnn_paper = newspaper.build(self.cnn_url)
+        self.article_df = pd.DataFrame(columns=columns)
 
     def extract_site_metadata(self):
-        cnn_paper = newspaper.build(self.cnn_url)
-        columns = ['article_id', 'category',
-                   'url', 'authors', 'keywords', 'body']
-        article_df = pd.DataFrame(columns=columns)
         for article in cnn_paper.articles:
             article.download()
             time.sleep(2)
@@ -37,6 +38,9 @@ class CNNNewsExtractor:
             article_df.sort_index()
         article_df.drop_duplicates(subset='body', keep='first', inplace=True)
         article_df = article_df.reset_index(drop=True)
+
+        # check if record already exists
+        if self.dao.has_table(self.table_name) and self.dao.has_record(self.table_name, self.columns[0], ):
 
     def write_to_file(self, article_df):
         for i in range(1, len(article_df.loc[:, 'article_id'])):

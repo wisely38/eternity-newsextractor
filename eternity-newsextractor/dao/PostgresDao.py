@@ -26,6 +26,20 @@ class PostgresDao:
         self.engine, self.metadata, self.connection = self.db_driver.connect_with_retries(
             3)
 
+    def has_records(self, table_name, primary_key, values):
+        try:
+            df = self.read_table(table_name)
+            if not isinstance(values, list):
+                values = list(values)
+            result_df = df.loc[df['id'].isin(values)]
+            if len(result_df.values.tolist()) == 0:
+                return False
+        except Exception as e:
+            print(e)
+            return False
+        else:
+            return True
+
     def has_record(self, table_name, primary_key, value):
         try:
             cmd = 'select * from {0} where {1} =:col'.format(
