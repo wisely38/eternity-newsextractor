@@ -1,6 +1,7 @@
-from sqlalchemy import Table, Column, Integer, String, ForeignKey
+from sqlalchemy import Table, Column, Integer, String, ForeignKey, sql, exc
 import sqlalchemy as sa
 from dao.PostgresDriver import PostgresDriver
+import psycopg2
 import pandas as pd
 import time
 import io
@@ -13,18 +14,44 @@ class PostgresDao:
         self.engine, self.metadata, self.connection = self.db_driver.connect_with_retries(
             3)
 
+    def has_record(self, table_name, primary_key, value):
+        try:
+            cmd = 'select * from {0} where {1} =:col'.format(
+                table_name, primary_key)
+            cursor = self.connection.execute(
+                sql.text(cmd), col=value
+            )
+            return bool(cursor.first())
+        except Exception as e:
+            print(e)
+            return False
+        else:
+            return True
+
+    def has_table(self, table_name):
+        try:
+            return self.engine.dialect.has_table(self.connection, table_name)
+        except Exception as e:
+            print(e)
+            return False
+        else:
+            return True
+
     def create_table(self, table_parameters):
         if not isinstance(table_parameters, list):
             raise Exception(
                 'Need to pass list of parameters including table name and column names!')
         else:
-            columns = table_parameters[2:]
-            self.table = Table(table_parameters[0], self.metadata, Column(table_parameters[1], String, primary_key=True),
-                               *(Column(header, String) for header in columns))
+            try:
+                columns = table_parameters[2:]
+                self.table = Table(table_parameters[0], self.metadata, Column(table_parameters[1], String, primary_key=True),
+                                   *(Column(header, String) for header in columns))
 
-            self.metadata.create_all(self.engine)
-            self.connection.execute("commit")
- 
+                self.metadata.create_all(self.engine)
+                self.connection.execute("commit")
+            except Exception as e:
+                print('Not able to create table {0}'.format(e))
+
     def delete_table(self, table_name):
         if not table_name:
             raise Exception('Need to pass table name!')
@@ -33,7 +60,8 @@ class PostgresDao:
         self.connection.execute("commit")
         self.connection.execute('VACUUM', self.engine)
         self.connection.execute("commit")
-        self.metadata.drop_all(self.engine)
+        self.db_driver.reset_metadata()
+        self.connection.close()
         self.engine, self.metadata, self.connection = self.db_driver.connect_with_retries(
             3)
 

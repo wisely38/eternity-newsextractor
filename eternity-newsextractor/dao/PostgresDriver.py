@@ -81,14 +81,25 @@ class PostgresDriver:
         url = self.db_url.format(user, password, host, port, db)
 
         # The return value of create_engine() is our connection object
-        engine = create_engine(url, client_encoding='utf8')
+        self.engine = create_engine(url, client_encoding='utf8')
 
         # We then bind the connection to MetaData()
-        meta = MetaData(bind=engine, reflect=True)
+        self.meta = MetaData(bind=self.engine, reflect=True)
 
-        engine.execution_options(
+        self.engine.execution_options(
             autocommit=True, autoflush=False, expire_on_commit=False)
 
         print('Connected to postgres with: user={0}, password={1}, db={2}, host={3}, port={4}'.format(
             user, password, db, host, port))
-        return engine, meta
+        return self.engine, self.meta
+
+    def get_db_engine(self):
+        return self.engine
+
+    def get_db_metadata(self):
+        return self.meta
+
+    def reset_metadata(self):
+        self.meta.drop_all(self.engine)
+        # self.meta = MetaData(bind=self.engine, reflect=True)
+        # self.meta.create_all(bind=self.engine)

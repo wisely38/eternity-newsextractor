@@ -31,21 +31,31 @@ class PostgresDaoTest(unittest.TestCase):
         self.dao.create_table(['test_table', 'id', 'col1', 'col2'])
 
     def step_03_read_table(self):
-        df = self.dao.read_table('test_table')
-        self.assertEqual(3, len(df.columns.tolist()))
+        self.dao.delete_table('test_table')
+        has_table = self.dao.has_table('test_table')
+        self.assertFalse(has_table)
+        self.dao.create_table(['test_table', 'id', 'col1', 'col2'])
+        has_table = self.dao.has_table('test_table')
+        self.assertTrue(has_table)
 
-    def step_03_update_table(self):
+    def step_04_update_table(self):
         df = self.dao.read_table('test_table')
         table_parameters = list()
         table_parameters.append('test_table')
         for col in df.columns.values.tolist():
             table_parameters.append(col)
-        df.loc[-1] = ['1', 'a', 'b']
+        df.loc[-1] = ['first', 'a', 'b']
         df.index = df.index + 1  # shifting index
         df = df.sort_index()
         self.dao.write_table(df, table_parameters)
         df = self.dao.read_table('test_table')
         self.assertEqual(1, len(df.values.tolist()))
+
+    def step_05_read_record(self):
+        has_record = self.dao.has_record('test_table','id','1')
+        self.assertFalse(has_record)
+        has_record = self.dao.has_record('test_table','id','first')
+        self.assertTrue(has_record)
 
     # def tearDown(self):
     #     self.item_dao.delete_item_collection()
