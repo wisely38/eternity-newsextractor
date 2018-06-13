@@ -1,3 +1,15 @@
+ #
+ # 
+ # Copyright (C) 2018 Raymond Wai Yan Ko <wisely38@hotmail.com>
+ #
+ # 
+ # This file is part of eternity-newsextractor.
+ # 
+ # eternity-newsextractor cannot be copied and/or distributed for commercial use 
+ # without the express permission of Raymond Wai Yan Ko <wisely38@hotmail.com>
+ #
+ #
+
 import os
 import sys
 current_path = os.path.dirname(os.path.dirname(
