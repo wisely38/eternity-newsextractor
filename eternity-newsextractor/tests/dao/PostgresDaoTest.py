@@ -5,9 +5,7 @@ current_path = os.path.dirname(os.path.dirname(
 sys.path.append(current_path)
 print('ParentCurrent PATH: {0}'.format(current_path))
 import unittest
-# from dao.PostgresDriver import PostgresDriver
 from dao.PostgresDao import PostgresDao
-import pandas as pd
 
 
 class PostgresDaoTest(unittest.TestCase):

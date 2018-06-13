@@ -44,8 +44,8 @@ class PostgresDriver:
         return engine, metadata, engine.connect()
 
     def connect_with_retries(self, retries):
-        return connect(retries, self.user, self.password,
-                       self.db, self.host, self.port)
+        return self.connect(retries, self.user, self.password,
+                            self.db, self.host, self.port)
 
     def connect_with_retries(self, retries=3, user=None, password=None, db=None, host=None, port=None):
         need_to_retry = True
@@ -63,7 +63,7 @@ class PostgresDriver:
                 print(db_conn_error)
                 try:
                     self.create_db()
-                except Exception as db_create_error:
+                except Exception as db_creation_error:
                     print(db_conn_error)
             # finally:
             #     if connection:
