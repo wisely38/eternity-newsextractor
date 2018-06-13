@@ -13,8 +13,8 @@ from sqlalchemy import Table, Column, String, sql
 
 from sqlalchemy import Table, Column, Integer, String, ForeignKey
 import sqlalchemy as sa
+from sqlalchemy import Table, Column, String, sql
 from dao.PostgresDriver import PostgresDriver
-import psycopg2
 import pandas as pd
 import io
 
