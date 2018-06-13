@@ -6,7 +6,7 @@ This project is intended to create a news extractor to store meta information an
 
 How to execute the script:
 
-        In command prompt, 
+        In command prompt, run "python CNNNewsExtractorRunner.py" to extract news article to DB, then run "python CNNNewsNlpAnalyzerRunner.py" 
 
 ## Motivation
 
