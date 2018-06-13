@@ -66,9 +66,9 @@ class CNNNewsExtractor:
     def write_to_file(self, article_df):
         for i in range(1, len(article_df.loc[:, 'article_id'])):
             filename = article_df.loc[i, 'article_id'] + '.txt'
-        with open(filename, 'w') as output:
-            print('writing out ', filename)
-            output.writelines(article_df.loc[i, 'body'])
+            with open(filename, 'w') as output:
+                print('Writing out file: ', filename)
+                output.writelines(article_df.loc[i, 'body'])
 
     def write_to_db(self, article_df):
         article_postgres_df = article_df.drop('body', 1)
