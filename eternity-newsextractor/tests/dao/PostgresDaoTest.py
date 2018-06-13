@@ -62,6 +62,8 @@ class PostgresDaoTest(unittest.TestCase):
         df.loc[-1] = ['third', 'c', 'd']
         df.index = df.index + 1  # shifting index
         df = df.sort_index()
+        value_count = df.loc[:, ['id']].values.tolist()
+        self.assertEqual(2, value_count)
         self.dao.write_table(df, table_parameters)
         df = self.dao.read_table('test_table')
         self.assertEqual(2, len(df.values.tolist()))
@@ -77,7 +79,8 @@ class PostgresDaoTest(unittest.TestCase):
         self.assertTrue(has_record)
         has_record = self.dao.has_records('test_table', 'id', ['0', '10'])
         self.assertFalse(has_record)
-        has_record = self.dao.has_records('test_table', 'id', ['third', 'second'])
+        has_record = self.dao.has_records(
+            'test_table', 'id', ['third', 'second'])
         self.assertTrue(has_record)
 
     # def tearDown(self):
