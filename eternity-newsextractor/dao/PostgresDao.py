@@ -85,7 +85,7 @@ class PostgresDao:
     def write_table(self, dataframe, table_parameters):
         connection = self.engine.raw_connection()
         cur = connection.cursor()
-        output = io.StringIO()
+        output = io.BytesIO()
         dataframe.to_csv(output, sep='\t', header=False, index=False)
         output.seek(0)
         columns = table_parameters[1:]
