@@ -11,7 +11,7 @@ class PostgresDriver:
         config_files = self.config.read('postgres_config.ini')
         if not config_files:
             self.config['DEFAULT'] = {'user': 'postgres',
-                                      'password': '123Postgres!',
+                                      'password': '',
                                       'db': 'newspaper',
                                       'host': 'localhost',
                                       'port': '5432'}
