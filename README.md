@@ -1,3 +1,8 @@
+## Summary
+
+NLP analyser for news article - NLP machine learning to analyse news article from CNN with python and postgres database
+See project NLP analyser for news article
+
 ## Synopsis
 
 This project is intended to create a news extractor to store meta information and keywords from news articles for further text analysis
