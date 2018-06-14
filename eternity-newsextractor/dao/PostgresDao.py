@@ -1,3 +1,4 @@
+from sqlalchemy import Table, Column, String, sql
  #
  # 
  # Copyright (C) 2018 Raymond Wai Yan Ko <wisely38@hotmail.com>
